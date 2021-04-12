@@ -21,6 +21,7 @@ def main(argv):
       'help',
       'site=',
       'file=',
+      'output=',
     ]
     opts, args = getopt.getopt(argv, '', params)
   except getopt.GetoptErr as err:
@@ -29,18 +30,21 @@ def main(argv):
     sys.exit(2)
   site = None
   file = None
-  epubLoc = None
+  output = 'output.epub'
   print('%s' % opts)
   for o, a in opts:
     if o in ['--help']:
-      print('./ebookConverter [OPTION] DEST')
+      print('./ebookConverter [OPTION]')
       print('--help: prints proper usage')
       print('--site=URL: the url of the site to be converted to .epub format')
       print('--file=SOURCE: the file location of a file to be converted to .epub format')
+      print('--output=OUTPUT: the output file name and extension desired')
     elif o in ['--site']:
       site = a
     elif o in ['--file']:
       file = None
+    elif o in ['--output']:
+      output = a
     else:
       print('Unhandled option: %s' % o)
       sys.exit(2)
@@ -50,7 +54,7 @@ def main(argv):
   if site:
     file = './tmp.html'
     exec_(['curl', '-L', '-o',  file, site])
-  exec_(['ebook-convert', file, 'output.epub'])
+  exec_(['ebook-convert', file, output])
   if site:
     exec_(['rm', '-f', file])
 
